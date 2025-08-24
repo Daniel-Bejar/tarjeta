@@ -78,30 +78,69 @@
                 <button class="category-btn" data-category="hacking-wifi">Hacking WiFi</button>
                 <button class="category-btn" data-category="certificaciones">Certificaciones</button>
                 <button class="category-btn" data-category="herramientas">Herramientas</button>
+                <button class="category-btn" data-category="laboratorios">Laboratorios</button>
             </div>
             
             <!-- Grid de proyectos -->
             <div class="projects-grid">
-                <!-- Proyecto 1 -->
-                <div class="project-card" data-category="bugbounty">
+                <!-- Proyecto 1: SQL Injection -->
+                <div class="project-card" data-category="laboratorios">
+                    <div class="project-img">
+                        <i class="fas fa-database" style="font-size: 3rem; color: #64ffda;"></i>
+                    </div>
+                    <div class="project-info">
+                        <h3 class="project-title">Laboratorios SQL Injection</h3>
+                        <p class="project-desc">Colección de laboratorios sobre Inyección SQL basados en PortSwigger Academy.</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">SQL Injection</span>
+                            <span class="tech-tag">Database</span>
+                            <span class="tech-tag">Web Security</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="Articulos/SQL-Injection/index.html" class="view-articles"><i class="fas fa-external-link-alt"></i> Ver laboratorios</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Proyecto 2: XSS -->
+                <div class="project-card" data-category="laboratorios">
                     <div class="project-img">
                         <i class="fas fa-bug" style="font-size: 3rem; color: #64ffda;"></i>
                     </div>
                     <div class="project-info">
-                        <h3 class="project-title">Investigación de vulnerabilidad XSS</h3>
-                        <p class="project-desc">Descubrimiento y explotación de vulnerabilidad XSS almacenado en aplicación web de gran tráfico.</p>
+                        <h3 class="project-title">Laboratorios XSS</h3>
+                        <p class="project-desc">Colección de laboratorios sobre Cross-Site Scripting basados en PortSwigger Academy.</p>
                         <div class="project-tech">
                             <span class="tech-tag">XSS</span>
                             <span class="tech-tag">Web Security</span>
                             <span class="tech-tag">JavaScript</span>
                         </div>
                         <div class="project-links">
-                            <a href="articulos/xss-avanzado.html" class="view-articles" data-category="bugbounty"><i class="fas fa-external-link-alt"></i> Ver artículos</a>
+                            <a href="Articulos/XSS/index.html" class="view-articles"><i class="fas fa-external-link-alt"></i> Ver laboratorios</a>
                         </div>
                     </div>
                 </div>
 
-                <!-- Proyecto 2 -->
+                <!-- Proyecto 3: CSRF -->
+                <div class="project-card" data-category="laboratorios">
+                    <div class="project-img">
+                        <i class="fas fa-exchange-alt" style="font-size: 3rem; color: #64ffda;"></i>
+                    </div>
+                    <div class="project-info">
+                        <h3 class="project-title">Laboratorios CSRF</h3>
+                        <p class="project-desc">Colección de laboratorios sobre Cross-Site Request Forgery basados en PortSwigger Academy.</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">CSRF</span>
+                            <span class="tech-tag">Web Security</span>
+                            <span class="tech-tag">Authentication</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="Articulos/CSRF/index.html" class="view-articles"><i class="fas fa-external-link-alt"></i> Ver laboratorios</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Proyecto 4: Análisis de protocolo de autenticación -->
                 <div class="project-card" data-category="bugbounty">
                     <div class="project-img">
                         <i class="fas fa-shield-alt" style="font-size: 3rem; color: #64ffda;"></i>
@@ -115,31 +154,12 @@
                             <span class="tech-tag">Protocol Analysis</span>
                         </div>
                         <div class="project-links">
-                            <a href="#" class="view-articles" data-category="bugbounty"><i class="fas fa-external-link-alt"></i> Ver artículos</a>
+                            <a href="#" class="view-articles"><i class="fas fa-external-link-alt"></i> Ver artículos</a>
                         </div>
                     </div>
                 </div>
 
-                <!-- Proyecto 3 -->
-                <div class="project-card" data-category="bugbounty">
-                    <div class="project-img">
-                        <i class="fas fa-database" style="font-size: 3rem; color: #64ffda;"></i>
-                    </div>
-                    <div class="project-info">
-                        <h3 class="project-title">SQL Injection en CMS popular</h3>
-                        <p class="project-desc">Detección y explotación de vulnerabilidad SQLi en plugin de CMS ampliamente utilizado.</p>
-                        <div class="project-tech">
-                            <span class="tech-tag">SQL Injection</span>
-                            <span class="tech-tag">Database</span>
-                            <span class="tech-tag">CMS Security</span>
-                        </div>
-                        <div class="project-links">
-                            <a href="articulos/sql-injection.html" class="view-articles" data-category="bugbounty"><i class="fas fa-external-link-alt"></i> Ver artículos</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Proyecto 4 -->
+                <!-- Proyecto 5: Auditoría de redes WiFi -->
                 <div class="project-card" data-category="hacking-wifi">
                     <div class="project-img">
                         <i class="fas fa-wifi" style="font-size: 3rem; color: #64ffda;"></i>
@@ -153,31 +173,31 @@
                             <span class="tech-tag">WPA3</span>
                         </div>
                         <div class="project-links">
-                            <a href="#" class="view-articles" data-category="hacking-wifi"><i class="fas fa-external-link-alt"></i> Ver artículos</a>
+                            <a href="#" class="view-articles"><i class="fas fa-external-link-alt"></i> Ver artículos</a>
                         </div>
                     </div>
                 </div>
 
-                <!-- Proyecto 5 -->
+                <!-- Proyecto 6: Preparación ejpt -->
                 <div class="project-card" data-category="certificaciones">
                     <div class="project-img">
                         <i class="fas fa-certificate" style="font-size: 3rem; color: #64ffda;"></i>
                     </div>
                     <div class="project-info">
-                        <h3 class="project-title">Preparación OSCP</h3>
-                        <p class="project-desc">Guía completa y recursos para preparar la certificación OSCP de Offensive Security.</p>
+                        <h3 class="project-title">Preparación eJPT</h3>
+                        <p class="project-desc">Guía completa y recursos para preparar la certificación ejpt de INE Security.</p>
                         <div class="project-tech">
-                            <span class="tech-tag">OSCP</span>
+                            <span class="tech-tag">eJPT</span>
                             <span class="tech-tag">Penetration Testing</span>
                             <span class="tech-tag">Certification</span>
                         </div>
                         <div class="project-links">
-                            <a href="#" class="view-articles" data-category="certificaciones"><i class="fas fa-external-link-alt"></i> Ver artículos</a>
+                            <a href="#" class="view-articles"><i class="fas fa-external-link-alt"></i> Ver artículos</a>
                         </div>
                     </div>
                 </div>
 
-                <!-- Proyecto 6 -->
+                <!-- Proyecto 7: Automatización con Bash -->
                 <div class="project-card" data-category="herramientas">
                     <div class="project-img">
                         <i class="fas fa-tools" style="font-size: 3rem; color: #64ffda;"></i>
@@ -191,7 +211,7 @@
                             <span class="tech-tag">Scripting</span>
                         </div>
                         <div class="project-links">
-                            <a href="#" class="view-articles" data-category="herramientas"><i class="fas fa-external-link-alt"></i> Ver artículos</a>
+                            <a href="#" class="view-articles"><i class="fas fa-external-link-alt"></i> Ver artículos</a>
                         </div>
                     </div>
                 </div>
@@ -206,11 +226,10 @@
                 <a href="https://github.com/Daniel-Bejar"><i class="fab fa-github"></i></a>
                 <a href="https://www.linkedin.com/in/daniel-béjar-a91713206"><i class="fab fa-linkedin"></i></a>
                 <a href="https://hackerone.com/doniti?type=user"><i class="fab fa-hackerrank"></i></a>
+            </div>
         </div>
     </footer>
 
     <script src="js/script.js"></script>
 </body>
 </html>
-
-
