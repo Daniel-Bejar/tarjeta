@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratorios SQL Injection | Daniel Béjar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <style>
+        .labs-container {
+            padding: 120px 0;
+        }
+        
+        .lab-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .lab-card {
+            background-color: var(--secondary);
+            border-radius: 8px;
+            padding: 25px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .lab-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .lab-icon {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .lab-title {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: var(--accent);
+        }
+        
+        .lab-desc {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+        
+        .lab-link {
+            color: var(--accent);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            font-weight: 500;
+        }
+        
+        .lab-link i {
+            margin-left: 8px;
+            transition: transform 0.3s;
+        }
+        
+        .lab-link:hover i {
+            transform: translateX(5px);
+        }
+        
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            color: var(--text-secondary);
+        }
+        
+        .breadcrumb a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        
+        .breadcrumb span {
+            margin: 0 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .lab-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">Daniel Béjar</div>
+                <ul class="nav-links">
+                    <li><a href="../../index.html#about">Sobre mí</a></li>
+                    <li><a href="../../index.html#projects">Proyectos</a></li>
+                </ul>
+                <button class="menu-btn" id="menuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Labs Section -->
+    <section class="labs-container">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="../../index.html">Inicio</a>
+                <span>/</span>
+                <span>Laboratorios SQL Injection</span>
+            </div>
+            
+            <h2 class="section-title">Laboratorios SQL Injection</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 40px; max-width: 800px;">
+                Esta sección contiene una colección de laboratorios prácticos sobre vulnerabilidades de inyección SQL,
+                basados en los ejercicios de PortSwigger Web Security Academy. Cada laboratorio incluye explicaciones
+                detalladas, ejemplos de código y técnicas de explotación.
+            </p>
+            
+            <div class="lab-grid">
+                <!-- Lab 1 -->
+                <div class="lab-card">
+                    <div class="lab-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3 class="lab-title">Inyección en cláusula WHERE</h3>
+                    <p class="lab-desc">
+                        Aprende a explotar vulnerabilidades SQL en cláusulas WHERE para recuperar datos ocultos
+                        de una aplicación web.
+                    </p>
+                    <a href="where-clause.html" class="lab-link">
+                        Ver laboratorio <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                
+                <!-- Lab 2 -->
+                <div class="lab-card">
+                    <div class="lab-icon">
+                        <i class="fas fa-user-secret"></i>
+                    </div>
+                    <h3 class="lab-title">Bypass de login</h3>
+                    <p class="lab-desc">
+                        Descubre cómo eludir mecanismos de autenticación mediante inyección SQL para acceder
+                        como administrador sin credenciales.
+                    </p>
+                    <a href="login-bypass.html" class="lab-link">
+                        Ver laboratorio <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                
+                <!-- Lab 3 -->
+                <div class="lab-card">
+                    <div class="lab-icon">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <h3 class="lab-title">Identificación de versión de BD</h3>
+                    <p class="lab-desc">
+                        Técnicas para identificar el tipo y versión de sistema de gestión de bases de datos
+                        mediante inyección SQL.
+                    </p>
+                    <a href="db-version.html" class="lab-link">
+                        Ver laboratorio <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                
+                <!-- Lab 4 -->
+                <div class="lab-card">
+                    <div class="lab-icon">
+                        <i class="fas fa-sitemap"></i>
+                    </div>
+                    <h3 class="lab-title">Enumeración de bases de datos</h3>
+                    <p class="lab-desc">
+                        Métodos para enumerar la estructura de bases de datos, incluyendo tablas y columnas,
+                        a través de inyección SQL.
+                    </p>
+                    <a href="enumeration.html" class="lab-link">
+                        Ver laboratorio <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                
+                <!-- Lab 5 -->
+                <div class="lab-card">
+                    <div class="lab-icon">
+                        <i class="fas fa-link"></i>
+                    </div>
+                    <h3 class="lab-title">Ataques UNION</h3>
+                    <p class="lab-desc">
+                        Aprende a utilizar el operador UNION en inyecciones SQL para recuperar datos de
+                        diferentes tablas de la base de datos.
+                    </p>
+                    <a href="union-attacks.html" class="lab-link">
+                        Ver laboratorio <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                
+                <!-- Lab 6 -->
+                <div class="lab-card">
+                    <div class="lab-icon">
+                        <i class="fas fa-blind"></i>
+                    </div>
+                    <h3 class="lab-title">Inyección SQL ciega</h3>
+                    <p class="lab-desc">
+                        Técnicas para explotar vulnerabilidades SQL cuando los resultados no son visibles
+                        en la respuesta de la aplicación.
+                    </p>
+                    <a href="blind.html" class="lab-link">
+                        Ver laboratorio <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                
+                <!-- Lab 7 -->
+                <div class="lab-card">
+                    <div class="lab-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3 class="lab-title">Retrasos temporales</h3>
+                    <p class="lab-desc">
+                        Aprende a utilizar retrasos temporales condicionales para extraer información
+                        en inyecciones SQL ciegas.
+                    </p>
+                    <a href="time-delays.html" class="lab-link">
+                        Ver laboratorio <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                
+                <!-- Lab 8 -->
+                <div class="lab-card">
+                    <div class="lab-icon">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h3 class="lab-title">Inyección out-of-band</h3>
+                    <p class="lab-desc">
+                        Técnicas avanzadas que utilizan canales externos para exfiltrar datos cuando
+                        las inyecciones tradicionales no son posibles.
+                    </p>
+                    <a href="oob.html" class="lab-link">
+                        Ver laboratorio <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="social-links">
+                <a href="https://github.com/Daniel-Bejar"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/daniel-béjar-a91713206"><i class="fab fa-linkedin"></i></a>
+                <a href="https://hackerone.com/doniti?type=user"><i class="fab fa-hackerrank"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
